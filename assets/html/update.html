@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-ru" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>{styles}</style>
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap" rel="stylesheet">
+    <script src="/assets/js/editor.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar" id="toolbar" onmousedown="return false" onselectstart="return false">
+            <div class="tool">
+                <svg id="bold-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+                <path d="M13.35,17.401l-4.201,0l0,-3.601l4.201,0c0.997,0 1.801,0.805 1.801,1.801c0,0.996 -0.804,
+                1.8 -1.801,1.8m-4.201,-10.802l3.601,0c0.996,0 1.801,0.804 1.801,1.8c0,0.996 -0.805,1.801 -1.801,
+                1.801l-3.601,0m6.722,1.548c1.164,-0.816 1.98,-2.149 1.98,-3.349c0,-2.712 -2.1,-4.801 -4.801,
+                -4.801l-7.502,0l0,16.804l8.45,0c2.521,0 4.454,-2.04 4.454,-4.549c0,-1.825 -1.033,-3.385 -2.581,
+                -4.105Z" style="fill-rule: nonzero;" fill="var(--text)">
+                </path></svg>
+            </div>
+            <div class="tool">
+                <svg id="italic-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+                <path d="M8.617,3.658l0,3.575l2.633,0l-2.075,9.534l-3.325,0l0,3.575l9.533,0l0,-3.575l-2.633,0l2.075,
+                -9.534l3.325,0l0,-3.575l-9.533,0Z" style="fill-rule: nonzero;" fill="var(--text)">
+                </path></svg>
+            </div>
+            <div class="tool">
+                <a id="header-1-button" style="font-weight: 800;">H1</a>
+            </div>
+            <div class="tool">
+                <a id="header-2-button" style="font-weight: 800;">H2</a>
+            </div>
+            <div class="tool">
+                <a id="header-3-button" style="font-weight: 800;">H3</a>
+            </div>
+            <div class="tool">
+                <svg id="yt-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" x="0px" y="0px" class="icon">
+                <path d="M18.1152 19.1673C11.1476 19.7147 5.88113 25.3804 5.54195
+                32.3612C5.2625 38.1129 5 44.7316 5 49.3006C5 53.9219 5.26854 60.6401 5.55155 66.4372C5.888 73.3287 11.0339
+                78.9567 17.9044 79.591C25.5099 80.2933 36.5142 81 50 81C63.4507 81 74.4329 80.2969 82.0362 79.5965C88.9333
+                78.9611 94.0894 73.2967 94.4213 66.3783C94.714 60.2748 95 53.2911 95 49.3006C95 45.353 94.7201 38.4759
+                94.4307 32.4196C94.0958 25.4118 88.821 19.7109 81.8267 19.1627C74.3405 18.576 63.5426 18 50 18C36.4223
+                18 25.6036 18.579 18.1152 19.1673ZM41 35.943L64.2 49.3006L41 62.6582V35.943Z" fill="var(--text)"/></svg>
+            </div>
+            <div class="tool">
+                <svg id="strike-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+                <path d="M20.874,12.059l0,1.729l-3.541,0c0.806,1.851 0.766,6.918 -5.026,6.918c-6.721,0.043 -6.463,-5.621 -6.463,
+                -5.621l3.203,0.044c0.024,2.914 2.55,2.914 3.05,2.879c0.516,-0.043 2.444,-0.034 2.598,-2.058c0.064,-0.942 -0.823,
+                -1.66 -1.791,-2.162l-9.778,0l0,-1.729l17.748,0m-2.896,-3.554l-3.211,-0.026c0,0 0.137,-2.395 -2.646,-2.404c-2.783,
+                -0.017 -2.541,1.902 -2.541,2.144c0.032,0.243 0.274,1.436 2.42,2.007l-5.074,0c0,0 -2.816,-5.82 4.057,-6.814c7.027,
+                -1.038 7.011,5.11 6.995,5.093Z" style="fill-rule: nonzero;" fill="var(--text)">
+                </path></svg>
+            </div>
+            <div class="tool">
+                <svg id="quote-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+                <path d="M14.446,18.235l2.92,0l1.946,-4.988l0,-7.482l-5.839,0l0,7.482l2.92,0m-10.732,4.988l2.919,0l1.947,-4.988l0,
+                -7.482l-5.839,0l0,7.482l2.919,0l-1.946,4.988Z" style="fill-rule: nonzero;" fill="var(--text)">
+                </path></svg>
+            </div>
+            <div class="tool">
+                <svg id="link-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+                <path d="M 10.5858,13.4142C 10.9763,13.8047 10.9763,14.4379 10.5858,14.8284C 10.1952,15.2189 9.56207,
+                15.2189 9.17154,14.8284C 7.21892,12.8758 7.21892,9.70995 9.17154,7.75733L 9.17157,7.75736L 12.707,4.2219C 14.6596,
+                2.26928 17.8255,2.26929 19.7781,4.2219C 21.7307,6.17452 21.7307,9.34034 19.7781,11.293L 18.2925,12.7785C 18.3008,
+                11.9583 18.1659,11.1368 17.8876,10.355L 18.3639,9.87865C 19.5355,8.70708 19.5355,6.80759 18.3639,5.63602C 17.1923,
+                4.46445 15.2929,4.46445 14.1213,5.63602L 10.5858,9.17155C 9.41419,10.3431 9.41419,12.2426 10.5858,
+                13.4142 Z M 13.4142,9.17155C 13.8047,8.78103 14.4379,8.78103 14.8284,9.17155C 16.781,11.1242 16.781,14.29 14.8284,
+                16.2426L 14.8284,16.2426L 11.2929,19.7782C 9.34026,21.7308 6.17444,21.7308 4.22182,19.7782C 2.26921,17.8255 2.2692,
+                14.6597 4.22182,12.7071L 5.70744,11.2215C 5.69913,12.0417 5.8341,12.8631 6.11234,13.645L 5.63601,14.1213C 4.46444,
+                15.2929 4.46444,17.1924 5.63601,18.3639C 6.80758,19.5355 8.70708,19.5355 9.87865,18.3639L 13.4142,14.8284C 14.5858,
+                13.6568 14.5858,11.7573 13.4142,10.5858C 13.0237,10.1952 13.0237,9.56207 13.4142,9.17155 Z " fill="var(--text)">
+                </path></svg>
+            </div>
+            <div class="tool">
+                <svg id="image-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+                <path d="M 12.9994,8.99807L 18.4994,8.99807L 12.9994,3.49807L 12.9994,8.99807 Z M 5.99938,1.99809L 13.9994,
+                1.99809L 19.9994,7.99808L 19.9994,19.9981C 19.9994,21.1021 19.1034,21.9981 17.9994,21.9981L 5.98937,
+                21.9981C 4.88537,21.9981 3.99939,21.1021 3.99939,19.9981L 4.0094,3.99808C 4.0094,2.89407 4.89437,1.99809 5.99938,
+                1.99809 Z M 6,20L 15,20L 18,20L 18,12L 14,16L 12,14L 6,20 Z M 8,9C 6.89543,9 6,9.89543 6,11C 6,12.1046 6.89543,
+                13 8,13C 9.10457,13 10,12.1046 10,11C 10,9.89543 9.10457,9 8,9 Z " fill="var(--text)">
+                </path></svg>
+            </div>
+        </div>
+        <form action="{url}" method="post" class="article-form" id="article-form">
+            <input name="name" type="text" id="name-field" class="form-control name-form" placeholder="Название" autocomplete="off" value="{name}" />
+            <div class="grow-field">
+                <textarea name="md" id="md-field" class="form-control md-form" placeholder="Ваш текст"
+                    onInput="this.parentNode.dataset.replicatedValue = this.value">{md}</textarea>
+            </div>
+            <button id="preview-button" class="button">ОПУБЛИКОВАТЬ</button>
+        </form>
+    </div>
+</body>
+</html>

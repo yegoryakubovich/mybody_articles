@@ -1,0 +1,145 @@
+body {
+    justify-content: center;
+    font-family: Golos Text, sans-serif;
+    height: 90%;
+    background: var(--background);
+    color: var(--text);
+}
+
+html {
+    height: 90%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.article-form {
+    margin-top: 15px;
+    width: 100%;
+}
+
+@media (min-width: 800px) {
+    .container {
+        padding: 0 25%;
+    }
+}
+
+.grow-field {
+    display: grid;
+    width: 100%;
+}
+
+.grow-field::after {
+    content: attr(data-replicated-value) " ";
+    white-space: pre-wrap;
+    visibility: hidden;
+}
+
+.grow-field>textarea {
+    resize: none;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.grow-field>textarea,
+.grow-field::after {
+    font: inherit;
+    grid-area: 1 / 1 / 1 / 1;
+    word-break: break-word;
+}
+
+.toolbar {
+    display: none;
+    position: sticky;
+    flex-wrap: wrap;
+    top: 0;
+    flex-direction: row;
+    justify-content: center;
+    background: var(--background);
+    width: 100%;
+}
+
+.tool {
+    display: flex;
+    border: 2px solid;
+    height: 2vh;
+    width: 2vh;
+    max-height: 30px;
+    margin: 5px 5px;
+    padding: 0.5vh;
+    border-radius: 15%;
+    justify-content: center;
+    user-select: none;
+}
+
+.tool > svg {
+    fill: var(--text);
+}
+
+.tool a {
+    color: var(--text);
+    font-size: 1.5vh;
+}
+
+.tool:hover {
+    background: #696969;
+    border-color: #696969;
+}
+
+.tool:hover > a {
+    color: var(--text);
+}
+
+.tool:hover > svg {
+    fill: var(--background);
+}
+
+
+.form-control {
+    border: 0 solid transparent;
+    font-family: Golos Text, sans-serif;
+    outline: none;
+    width: 100%;
+    user-select: none;
+    padding-bottom: 10px;
+}
+
+.name-form {
+    font-size: 30px;
+    padding-left: 0;
+    padding-top: 0;
+    background: var(--background);
+    color: var(--text);
+}
+
+.md-form{
+    font-size: 17px;
+    resize: none;
+    padding: 0;
+    background: var(--background);
+    color: var(--text);
+}
+
+.button {
+    font-family: Golos Text, sans-serif;
+    background-color: transparent;
+    border: 2px solid;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 5px 15px;
+    margin: 15px 0;
+    border-radius: 20px;
+    user-select: none;
+    color: var(--text);
+}
+
+.button:hover {
+    border-color: #696969;
+    background: #696969;
+    color: var(--background);
+}
+
+

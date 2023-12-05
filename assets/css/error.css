@@ -1,0 +1,26 @@
+body {
+    justify-content: center;
+    font-family: Golos Text, sans-serif;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+a {
+    margin-left: 5px;
+    text-align:center;
+    font-size: 3vh;
+    margin-bottom: 10px;
+}
+
+.default-text {
+    font-style: italic;
+}
+
