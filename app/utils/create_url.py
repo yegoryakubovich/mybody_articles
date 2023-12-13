@@ -29,11 +29,11 @@ async def create_url(
 ):
     params = {}
     for name, value in zip(
-            ['language', 'token', 'is_admin', 'bg_color', 'font_color'],
-            [language, token, is_admin, bg_color, font_color],
+            ['id_', 'language', 'token', 'is_admin', 'bg_color', 'font_color'],
+            [id_, language, token, is_admin, bg_color, font_color],
     ):
         if value:
             params[name] = value
 
-    url = f'/{id_}/{type_}?' + urlencode(params)
+    url = f'/{type_}?' + urlencode(params)
     return url

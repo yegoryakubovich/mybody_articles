@@ -39,10 +39,11 @@ async def route(
     # Checking a token, has a role in case of a flag is_admin
     if token:
         account = await mybody_api_client.account.get()
+        print(account)
         if account.state == 'error':
             return ErrorResponse(message=account.message)
         if is_admin:
-            if 'articles' not in account.roles:
+            if 'articles' not in account.permissions:
                 return ErrorResponse(message='Insufficient permissions to view this article')
     elif is_admin:
         return ErrorResponse(message='Insufficient permissions to view this article')

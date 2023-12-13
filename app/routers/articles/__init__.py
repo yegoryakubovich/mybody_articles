@@ -15,13 +15,15 @@
 #
 
 
-from .unit import router as router_unit
 from app.utils.router import Router
+from .get import router as router_get
+from .update import router as router_update
 
 
 router = Router(
     prefix='',
     routes_included=[
-        router_unit,
+        router_get,
+        router_update,
     ],
 )
