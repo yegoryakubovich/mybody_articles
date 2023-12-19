@@ -38,7 +38,7 @@ async def route(
         font_color: str = FONT_COLOR_DEFAULT,
 ):
     mybody_api_client = MyBodyApiClient(token=token)
-    response = await mybody_api_client.article.get(
+    response = await mybody_api_client.article.get_additional(
         id_=id_,
         language=language,
     )
@@ -81,7 +81,7 @@ async def route(
 ):
     mybody_api_client = MyBodyApiClient(token=token)
 
-    article = await mybody_api_client.article.get(
+    article = await mybody_api_client.article.get_additional(
         id_=id_,
         language=language or None,
     )

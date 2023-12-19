@@ -47,12 +47,11 @@ async def route(
                 return ErrorResponse(message='Insufficient permissions to view this article')
     elif is_admin:
         return ErrorResponse(message='Insufficient permissions to view this article')
-
-    article = await mybody_api_client.article.get(
+    article = await mybody_api_client.article.get_additional(
         id_=id_,
         language=language or None,
     )
-
+    print(article)
     if article.state == 'error':
         return ErrorResponse(message=article.message)
     if article.language != language:
