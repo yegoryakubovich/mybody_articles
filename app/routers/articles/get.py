@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+from types import SimpleNamespace
 
 from mybody_api_client import MyBodyApiClient
 from starlette.responses import HTMLResponse, RedirectResponse
@@ -38,10 +38,10 @@ async def route(
 
     # Checking a token, has a role in case of a flag is_admin
     if token:
-        account = await mybody_api_client.account.get()
-        print(account)
-        if account.state == 'error':
-            return ErrorResponse(message=account.message)
+        response = await mybody_api_client.account.get()
+        if response.state == 'error':
+            return ErrorResponse(message=response.message)
+        account = SimpleNamespace(**response.account)
         if is_admin:
             if 'articles' not in account.permissions:
                 return ErrorResponse(message='Insufficient permissions to view this article')
@@ -51,7 +51,6 @@ async def route(
         id_=id_,
         language=language or None,
     )
-    print(article)
     if article.state == 'error':
         return ErrorResponse(message=article.message)
     if article.language != language:
