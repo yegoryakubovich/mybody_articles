@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+
 from types import SimpleNamespace
 
 from mybody_api_client import MyBodyApiClient
@@ -38,7 +40,7 @@ async def route(
 
     # Checking a token, has a role in case of a flag is_admin
     if token:
-        response = await mybody_api_client.account.get()
+        response = await mybody_api_client.account.get_additional()
         if response.state == 'error':
             return ErrorResponse(message=response.message)
         account = SimpleNamespace(**response.account)

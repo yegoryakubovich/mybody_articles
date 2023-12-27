@@ -6,4 +6,4 @@ Markdown==3.4.4
 yt_iframe==1.0.5
 python-multipart==0.0.6
 furl==2.1.3
-mybody_api_client==0.3.4
+mybody_api_client==0.3.7
