@@ -18,6 +18,7 @@
 from types import SimpleNamespace
 
 from mybody_api_client import MyBodyApiClient
+from mybody_api_client.utils.base_section import ApiException
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
@@ -43,16 +44,19 @@ async def route(
         response = await mybody_api_client.client.account.get()
         if response.state == 'error':
             return ErrorResponse(message=response.message)
-        account = SimpleNamespace(**response.account)
+        permissions = response['permissions']
         if is_admin:
-            if 'articles' not in account.permissions:
+            if 'articles' not in permissions:
                 return ErrorResponse(message='Insufficient permissions to view this article')
     elif is_admin:
         return ErrorResponse(message='Insufficient permissions to view this article')
-    article = await mybody_api_client.client.article.get_additional(
-        id_=id_,
-        language=language or None,
-    )
+    try:
+        article = await mybody_api_client.client.article.get_additional(
+            id_=id_,
+            language=language or None,
+        )
+    except ApiException as e:
+        return ErrorResponse(message=e)
     if article.state == 'error':
         return ErrorResponse(message=article.message)
     if article.language != language:

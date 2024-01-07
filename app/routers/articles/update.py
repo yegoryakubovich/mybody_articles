@@ -19,6 +19,7 @@ from typing import Annotated
 
 from fastapi import Form
 from mybody_api_client import MyBodyApiClient
+from mybody_api_client.utils.base_section import ApiException
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
@@ -36,36 +37,39 @@ async def route(
         bg_color: str = BG_COLOR_DEFAULT,
         font_color: str = FONT_COLOR_DEFAULT,
 ):
-    mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
-    response = await mybody_api_client.article.get_additional(
-        id_=id_,
-        language=language,
-    )
-    if response.state == 'error':
-        return ErrorResponse(message=response.message)
-
-    name, md = response.name, response.md
-    url = await create_url(
-        id_=id_,
-        type_='update',
-        token=token,
-        language=language,
-        is_admin=True,
-        bg_color=bg_color,
-        font_color=font_color,
-    )
-    styles = await generate_update_css(bg_color=bg_color, font_color=font_color)
-
-    with open(f'assets/html/update.html', encoding='utf-8', mode='r') as base_html:
-        content = base_html.read().format(
-            title=name,
-            name=name,
-            md=md,
-            url=url,
-            styles=styles,
+    try:
+        mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
+        response = await mybody_api_client.client.article.get_additional(
+            id_=id_,
+            language=language,
         )
+        if response.state == 'error':
+            return ErrorResponse(message=response.message)
 
-    return HTMLResponse(content=content)
+        name, md = response.name, response.md
+        url = await create_url(
+            id_=id_,
+            type_='update',
+            token=token,
+            language=language,
+            is_admin=True,
+            bg_color=bg_color,
+            font_color=font_color,
+        )
+        styles = await generate_update_css(bg_color=bg_color, font_color=font_color)
+
+        with open(f'assets/html/update.html', encoding='utf-8', mode='r') as base_html:
+            content = base_html.read().format(
+                title=name,
+                name=name,
+                md=md,
+                url=url,
+                styles=styles,
+            )
+
+        return HTMLResponse(content=content)
+    except ApiException as e:
+        return ErrorResponse(message=e)
 
 
 @router.post()
@@ -78,31 +82,34 @@ async def route(
         bg_color: str = BG_COLOR_DEFAULT,
         font_color: str = FONT_COLOR_DEFAULT,
 ):
-    mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
+    try:
+        mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
 
-    article = await mybody_api_client.client.article.get_additional(
-        id_=id_,
-        language=language or None,
-    )
-    if article.name != name:
-        # Update article name
-        pass
+        article = await mybody_api_client.client.article.get_additional(
+            id_=id_,
+            language=language or None,
+        )
+        if article.name != name:
+            # Update article name
+            pass
 
-    if article.language != language:
-        language = article.language
+        if article.language != language:
+            language = article.language
 
-    await mybody_api_client.admin.article.update_md(
-        id_=id_,
-        md=md,
-        language=language or None,
-    )
-    url = await create_url(
-        id_=id_,
-        type_='get',
-        token=token,
-        language=language,
-        is_admin=True,
-        bg_color=bg_color,
-        font_color=font_color,
-    )
-    return RedirectResponse(url=url, status_code=HTTP_302_FOUND)
+        await mybody_api_client.admin.article.update_md(
+            id_=id_,
+            md=md,
+            language=language or None,
+        )
+        url = await create_url(
+            id_=id_,
+            type_='get',
+            token=token,
+            language=language,
+            is_admin=True,
+            bg_color=bg_color,
+            font_color=font_color,
+        )
+        return RedirectResponse(url=url, status_code=HTTP_302_FOUND)
+    except ApiException as e:
+        return ErrorResponse(message=e)
