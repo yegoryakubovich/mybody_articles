@@ -17,3 +17,4 @@
 
 BG_COLOR_DEFAULT = '#ffffff'
 FONT_COLOR_DEFAULT = '#1d1d1d'
+IS_TEST = True

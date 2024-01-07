@@ -22,7 +22,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
 from app.utils import ErrorResponse, Router, md_to_html, generate_get_css, create_url
-from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT
+from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, IS_TEST
 
 router = Router(prefix='/get')
 
@@ -36,7 +36,7 @@ async def route(
         font_color: str = FONT_COLOR_DEFAULT,
         is_admin: bool = False,
 ):
-    mybody_api_client = MyBodyApiClient(token=token)
+    mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
 
     # Checking a token, has a role in case of a flag is_admin
     if token:
