@@ -40,7 +40,7 @@ async def route(
 
     # Checking a token, has a role in case of a flag is_admin
     if token:
-        response = await mybody_api_client.account.get_additional()
+        response = await mybody_api_client.client.account.get()
         if response.state == 'error':
             return ErrorResponse(message=response.message)
         account = SimpleNamespace(**response.account)
@@ -49,7 +49,7 @@ async def route(
                 return ErrorResponse(message='Insufficient permissions to view this article')
     elif is_admin:
         return ErrorResponse(message='Insufficient permissions to view this article')
-    article = await mybody_api_client.article.get_additional(
+    article = await mybody_api_client.client.article.get_additional(
         id_=id_,
         language=language or None,
     )

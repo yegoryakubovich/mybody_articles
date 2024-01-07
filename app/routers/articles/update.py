@@ -81,7 +81,7 @@ async def route(
 ):
     mybody_api_client = MyBodyApiClient(token=token)
 
-    article = await mybody_api_client.article.get_additional(
+    article = await mybody_api_client.client.article.get_additional(
         id_=id_,
         language=language or None,
     )
@@ -92,7 +92,7 @@ async def route(
     if article.language != language:
         language = article.language
 
-    await mybody_api_client.article.update_md(
+    await mybody_api_client.admin.article.update_md(
         id_=id_,
         md=md,
         language=language or None,
