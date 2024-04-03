@@ -19,12 +19,12 @@ from typing import Annotated
 
 from fastapi import Form
 from mybody_api_client import MyBodyApiClient
-from mybody_api_client.utils.base_section import ApiException
+from mybody_api_client.utils.exceptions import ApiException
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
 from app.utils import Router, ErrorResponse, create_url, generate_update_css
-from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, IS_TEST
+from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, API_URL
 
 router = Router(prefix='/update')
 
@@ -38,14 +38,11 @@ async def route(
         font_color: str = FONT_COLOR_DEFAULT,
 ):
     try:
-        mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
-        response = await mybody_api_client.client.article.get_additional(
+        mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
+        response = await mybody_api_client.client.articles.get_additional(
             id_=id_,
             language=language,
         )
-        if response.state == 'error':
-            return ErrorResponse(message=response.message)
-
         name, md = response.name, response.md
         url = await create_url(
             id_=id_,
@@ -69,7 +66,7 @@ async def route(
 
         return HTMLResponse(content=content)
     except ApiException as e:
-        return ErrorResponse(message=e)
+        return ErrorResponse(code=e.code, message=e.message)
 
 
 @router.post()
@@ -83,20 +80,17 @@ async def route(
         font_color: str = FONT_COLOR_DEFAULT,
 ):
     try:
-        mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
+        mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
 
-        article = await mybody_api_client.client.article.get_additional(
+        article = await mybody_api_client.client.articles.get_additional(
             id_=id_,
             language=language or None,
         )
-        if article.name != name:
-            # Update article name
-            pass
 
         if article.language != language:
             language = article.language
 
-        await mybody_api_client.admin.article.update_md(
+        await mybody_api_client.admin.articles.update_md(
             id_=id_,
             md=md,
             language=language or None,
@@ -112,4 +106,4 @@ async def route(
         )
         return RedirectResponse(url=url, status_code=HTTP_302_FOUND)
     except ApiException as e:
-        return ErrorResponse(message=e)
+        return ErrorResponse(code=e.code, message=e.message)

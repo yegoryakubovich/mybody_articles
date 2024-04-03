@@ -18,12 +18,13 @@
 from types import SimpleNamespace
 
 from mybody_api_client import MyBodyApiClient
-from mybody_api_client.utils.base_section import ApiException
+from mybody_api_client.utils.exceptions import ApiException
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
 from app.utils import ErrorResponse, Router, md_to_html, generate_get_css, create_url
-from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, IS_TEST
+from app.utils.exceptions import NotEnoughPermissions
+from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, API_URL
 
 router = Router(prefix='/get')
 
@@ -37,28 +38,27 @@ async def route(
         font_color: str = FONT_COLOR_DEFAULT,
         is_admin: bool = False,
 ):
-    mybody_api_client = MyBodyApiClient(token=token, is_test=IS_TEST)
+    mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
 
     # Checking a token, has a role in case of a flag is_admin
     if token:
-        response = await mybody_api_client.client.account.get()
-        if response.state == 'error':
-            return ErrorResponse(message=response.message)
+        try:
+            response = await mybody_api_client.client.accounts.get()
+        except ApiException as e:
+            return ErrorResponse(code=e.code, message=e.message)
         permissions = response['permissions']
         if is_admin:
             if 'articles' not in permissions:
-                return ErrorResponse(message='Insufficient permissions to view this article')
+                return ErrorResponse(code=NotEnoughPermissions.code, message=NotEnoughPermissions.message)
     elif is_admin:
-        return ErrorResponse(message='Insufficient permissions to view this article')
+        return ErrorResponse(code=NotEnoughPermissions.code, message=NotEnoughPermissions.message)
     try:
-        article = await mybody_api_client.client.article.get_additional(
+        article = await mybody_api_client.client.articles.get_additional(
             id_=id_,
             language=language or None,
         )
     except ApiException as e:
-        return ErrorResponse(message=e)
-    if article.state == 'error':
-        return ErrorResponse(message=article.message)
+        return ErrorResponse(code=e.code, message=e.message)
     if article.language != language:
         language = article.language
         redirect_url = await create_url(

@@ -1,5 +1,5 @@
 #
-# (c) 2023, Yegor Yakubovich, yegoryakubovich.com, personal@yegoryakybovich.com
+# (c) 2024, Yegor Yakubovich, yegoryakubovich.com, personal@yegoryakybovich.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,14 @@
 #
 
 
-BG_COLOR_DEFAULT = '#ffffff'
-FONT_COLOR_DEFAULT = '#1d1d1d'
-IS_TEST = True
-API_URL = 'https://api.mybody.one'
+from .base import ApiException
+
+
+class InvalidFileType(ApiException):
+    code = 7000
+    message = 'Invalid file type. Please upload an image'
+
+
+class TooLargeFile(ApiException):
+    code = 7001
+    message = 'Uploaded file is too large. Available size up to 16MB'

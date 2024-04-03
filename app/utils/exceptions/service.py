@@ -1,5 +1,5 @@
 #
-# (c) 2023, Yegor Yakubovich, yegoryakubovich.com, personal@yegoryakybovich.com
+# (c) 2024, Yegor Yakubovich, yegoryakubovich.com, personal@yegoryakybovich.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
 #
 
 
-BG_COLOR_DEFAULT = '#ffffff'
-FONT_COLOR_DEFAULT = '#1d1d1d'
-IS_TEST = True
-API_URL = 'https://api.mybody.one'
+from .base import ApiException
+
+
+class InvalidServiceQuestionList(ApiException):
+    code = 8000
+    message = 'Invalid question list'
