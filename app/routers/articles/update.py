@@ -94,6 +94,7 @@ async def route(
             id_=id_,
             md=md,
             language=language or None,
+            name=name or None,
         )
         url = await create_url(
             id_=id_,
@@ -107,3 +108,4 @@ async def route(
         return RedirectResponse(url=url, status_code=HTTP_302_FOUND)
     except ApiException as e:
         return ErrorResponse(code=e.code, message=e.message)
+

@@ -22,6 +22,6 @@ class ErrorResponse:
     def __new__(cls, **kwargs) -> HTMLResponse:
         with open('assets/html/error.html', encoding='utf-8', mode='r') as base_html:
             content = base_html.read().format(
-                error_text=kwargs,
+                error_text=f'{kwargs.get("code")}: {kwargs.get("message")}',
             )
         return HTMLResponse(content=content)
