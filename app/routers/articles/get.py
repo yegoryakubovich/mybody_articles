@@ -23,7 +23,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
 from app.utils import ErrorResponse, Router, md_to_html, generate_get_css, create_url
-from app.utils.exceptions import NotEnoughPermissions
+from app.utils.exceptions import NotEnoughPermissions, ArticleSessionRequired
 from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, API_URL
 
 router = Router(prefix='/get')
@@ -38,59 +38,65 @@ async def route(
         font_color: str = FONT_COLOR_DEFAULT,
         is_admin: bool = False,
 ):
-    mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
-
-    # Checking a token, has a role in case of a flag is_admin
-    if token:
-        try:
-            response = await mybody_api_client.client.accounts.get()
-        except ApiException as e:
-            return ErrorResponse(code=e.code, message=e.message)
-        permissions = response['permissions']
-        if is_admin:
-            if 'articles' not in permissions:
-                return ErrorResponse(code=NotEnoughPermissions.code, message=NotEnoughPermissions.message)
-    elif is_admin:
-        return ErrorResponse(code=NotEnoughPermissions.code, message=NotEnoughPermissions.message)
     try:
+        mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
+
+        article = await mybody_api_client.client.articles.get(
+            id_=id_,
+        )
+
+        # Checking a token, has a role in case of a flag is_admin
+        if token:
+            account = await mybody_api_client.client.accounts.get()
+            permissions = account['permissions']
+            if is_admin:
+                if 'articles' not in permissions:
+                    raise NotEnoughPermissions
+        else:
+            if not article['can_guest']:
+                raise ArticleSessionRequired
+            if is_admin:
+                raise NotEnoughPermissions
+
         article = await mybody_api_client.client.articles.get_additional(
             id_=id_,
             language=language or None,
         )
-    except ApiException as e:
-        return ErrorResponse(code=e.code, message=e.message)
-    if article.language != language:
-        language = article.language
-        redirect_url = await create_url(
+
+        if article.language != language:
+            language = article.language
+            redirect_url = await create_url(
+                id_=id_,
+                type_='get',
+                token=token,
+                language=language,
+                is_admin=is_admin,
+                bg_color=bg_color,
+                font_color=font_color,
+            )
+            return RedirectResponse(url=redirect_url, status_code=HTTP_302_FOUND)
+
+        # Generate response
+        body = await md_to_html(md=article.md)
+        styles = await generate_get_css(bg_color=bg_color, font_color=font_color)
+        url = await create_url(
             id_=id_,
-            type_='get',
+            type_='update',
             token=token,
             language=language,
-            is_admin=is_admin,
+            is_admin=True,
             bg_color=bg_color,
             font_color=font_color,
         )
-        return RedirectResponse(url=redirect_url, status_code=HTTP_302_FOUND)
 
-    # Generate response
-    body = await md_to_html(md=article.md)
-    styles = await generate_get_css(bg_color=bg_color, font_color=font_color)
-    url = await create_url(
-        id_=id_,
-        type_='update',
-        token=token,
-        language=language,
-        is_admin=True,
-        bg_color=bg_color,
-        font_color=font_color,
-    )
-
-    with open(f'assets/html/get.html', encoding='utf-8', mode='r') as base_html:
-        content = base_html.read().format(
-            styles=styles,
-            title=article.name,
-            md=body,
-            button_display='block' if is_admin else 'none',
-            url=url,
-        )
-    return HTMLResponse(content=content)
+        with open(f'assets/html/get.html', encoding='utf-8', mode='r') as base_html:
+            content = base_html.read().format(
+                styles=styles,
+                title=article.name,
+                md=body,
+                button_display='block' if is_admin else 'none',
+                url=url,
+            )
+        return HTMLResponse(content=content)
+    except ApiException as e:
+        return ErrorResponse(code=e.code, message=e.message)
