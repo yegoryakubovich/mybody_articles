@@ -34,11 +34,11 @@ async def md_to_html(
             md_str_list[i] = await generate_youtube_iframe(md_str_list[i])
         elif '![' in md_str_list[i]:
             md_str_list[i] = await generate_image_tag(md_str_list[i])
-        md_str += md_str_list[i] + '<br>'
+        md_str += md_str_list[i] + '<br>' + '\n'
     md_html_list = markdown(md_str).split('\n')
     for i in range(len(md_html_list)):
         if '<p><img' in md_html_list[i]:
             md_html_list[i] = md_html_list[i][:2] + ' style="text-align: center"' + md_html_list[i][2:]
-        body_html += md_html_list[i]
+        body_html += md_html_list[i] + '\n'
 
     return body_html
