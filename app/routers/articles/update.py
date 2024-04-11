@@ -24,7 +24,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
 
 from app.utils import Router, ErrorResponse, create_url, generate_update_css
-from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, API_URL
+from config import settings
 
 router = Router(prefix='/update')
 
@@ -34,11 +34,11 @@ async def route(
         id_: int,
         token: str,
         language: str = None,
-        bg_color: str = BG_COLOR_DEFAULT,
-        font_color: str = FONT_COLOR_DEFAULT,
+        bg_color: str = settings.bg_color_default,
+        font_color: str = settings.font_color_default,
 ):
     try:
-        mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
+        mybody_api_client = MyBodyApiClient(token=token, url=settings.api_url)
         response = await mybody_api_client.client.articles.get_additional(
             id_=id_,
             language=language,
@@ -76,11 +76,11 @@ async def route(
         id_: int,
         token: str,
         language: str = None,
-        bg_color: str = BG_COLOR_DEFAULT,
-        font_color: str = FONT_COLOR_DEFAULT,
+        bg_color: str = settings.bg_color_default,
+        font_color: str = settings.font_color_default,
 ):
     try:
-        mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
+        mybody_api_client = MyBodyApiClient(token=token, url=settings.api_url)
 
         article = await mybody_api_client.client.articles.get_additional(
             id_=id_,

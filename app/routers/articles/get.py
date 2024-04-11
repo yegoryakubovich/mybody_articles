@@ -14,32 +14,41 @@
 # limitations under the License.
 #
 
+from typing import Optional
 
-from types import SimpleNamespace
-
+from fastapi import Depends
 from mybody_api_client import MyBodyApiClient
-from mybody_api_client.utils.exceptions import ApiException
+from pydantic import BaseModel, Field
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_302_FOUND
+from mybody_api_client.utils.exceptions import ApiException, NotEnoughPermissions, ArticleSessionRequired
 
 from app.utils import ErrorResponse, Router, md_to_html, generate_get_css, create_url
-from app.utils.exceptions import NotEnoughPermissions, ArticleSessionRequired
-from config import BG_COLOR_DEFAULT, FONT_COLOR_DEFAULT, API_URL
+from config import settings
 
 router = Router(prefix='/get')
 
 
+class ArticleGetSchema(BaseModel):
+    id: int = Field()
+    token: Optional[str] = Field(default=None)
+    language: Optional[str] = Field(default=None)
+    bg_color: Optional[str] = Field(default=settings.bg_color_default)
+    font_color: Optional[str] = Field(default=settings.font_color_default)
+    is_admin: Optional[bool] = Field(default=False)
+
+
 @router.get()
-async def route(
-        id_: int,
-        token: str = None,
-        language: str = None,
-        bg_color: str = BG_COLOR_DEFAULT,
-        font_color: str = FONT_COLOR_DEFAULT,
-        is_admin: bool = False,
-):
+async def route(schema: ArticleGetSchema = Depends()):
     try:
-        mybody_api_client = MyBodyApiClient(token=token, url=API_URL)
+        id_ = schema.id
+        token = schema.token
+        language = schema.language
+        bg_color = schema.bg_color
+        font_color = schema.font_color
+        is_admin = schema.is_admin
+
+        mybody_api_client = MyBodyApiClient(token=token, url=settings.api_url)
 
         article = await mybody_api_client.client.articles.get(
             id_=id_,

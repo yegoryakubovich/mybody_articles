@@ -20,13 +20,14 @@ async def generate_image_tag(
 ):
     link = tag[tag.find('(')+1:tag.find(')')]
     description = tag[tag.find('[')+1:tag.find(']')]
-    content = f"""<p style="text-align: center; margin: 5px 0">
-    <img alt="{description}" src="{link}" onerror="this.onerror=null;this.src='/assets/images/not_found.png';">
-    <p style="
+    content = f"""<p style="text-align: center; margin: 0">
+    <img alt="{description}" src="{link}" onerror="this.onerror=null;this.src='/assets/images/not_found.png';">"""
+    if description:
+        content += f"""<p style="
     text-align: center;
-     font-style: italic;
+     font-style: italic
       font-size: 14px;
        color: var(--text-secondary);
-        margin: 0 0; margin-bottom: 10px">{description}</p>
-    </p>"""
+        margin: 0 0">{description}</p>"""
+    content += """</p>"""
     return content

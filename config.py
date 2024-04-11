@@ -15,7 +15,15 @@
 #
 
 
-BG_COLOR_DEFAULT = '#ffffff'
-FONT_COLOR_DEFAULT = '#1d1d1d'
-IS_TEST = True
-API_URL = 'https://api.mybody.one'
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    bg_color_default: str
+    font_color_default: str
+    api_url: str
+
+    model_config = SettingsConfigDict(env_file='.env')
+
+
+settings = Settings()
