@@ -15,10 +15,11 @@
 #
 
 
+from starlette.responses import RedirectResponse
+
 from app.utils.router import Router
 from .get import router as router_get
 from .update import router as router_update
-
 
 router = Router(
     prefix='',
@@ -27,3 +28,8 @@ router = Router(
         router_update,
     ],
 )
+
+
+@router.get('/', include_in_schema=False)
+async def route():
+    return RedirectResponse('/docs')
